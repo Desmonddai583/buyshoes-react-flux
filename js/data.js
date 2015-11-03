@@ -1,30 +1,3 @@
-let cartItems = {
-  "jameson-vulc": {
-    id: "jameson-vulc",
-    quantity: 1,
-  },
-
-  "marana-x-hook-ups": {
-    id: "marana-x-hook-ups",
-    quantity: 2,
-  },
-
-  "scout-womens-6": {
-    id: "scout-womens-6",
-    quantity: 2,
-  },
-
-  "scout-womens-coco-ho-5": {
-    id: "scout-womens-coco-ho-5",
-    quantity: 1,
-  },
-
-  "jameson-2-womens-8": {
-    id: "jameson-2-womens-8",
-    quantity: 1,
-  },
-};
-
 let products = {
 
   "jameson-vulc": {
@@ -93,6 +66,5 @@ let products = {
 };
 
 module.exports = {
-  products,
-  cartItems,
+  products
 }

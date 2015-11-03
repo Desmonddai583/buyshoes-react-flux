@@ -1,9 +1,11 @@
 const React = require("react");
+const CartStore = require("../stores/CartStore");
+let {updateCartItemQuantity} = CartStore;
 
 let QuantityControl = React.createClass({
   render() {
     let {variant} = this.props;
-    let {quantity} = this.props.item;
+    let {id, quantity} = this.props.item;
 
     let className = "adjust-qty";
     if(variant === "gray") {
@@ -12,9 +14,9 @@ let QuantityControl = React.createClass({
 
     return (
       <div className={className}>
-        <a className="adjust-qty__button">-</a>
+        <a onClick={updateCartItemQuantity.bind(null, id, quantity - 1)} className="adjust-qty__button">-</a>
         <div className="adjust-qty__number">{quantity}</div>
-        <a className="adjust-qty__button">+</a>
+        <a onClick={updateCartItemQuantity.bind(null, id, quantity + 1)} className="adjust-qty__button">+</a>
       </div>
     );
   }

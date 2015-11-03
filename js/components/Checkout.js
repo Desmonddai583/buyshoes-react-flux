@@ -1,15 +1,23 @@
 const React = require("react");
-
-const {cartItems,products} = require("../data");
+const CartStore = require("../stores/CartStore");
+const {products} = require("../data");
 
 let Checkout = React.createClass({
+  componentDidMount() {
+    CartStore.addChangeListener(this.forceUpdate.bind(this));
+  },
+
   render() {
-    let subtotal = 0;
-    Object.keys(cartItems).forEach(key => {
-      let {quantity} = cartItems[key];
-      let {price} = products[key];
-      subtotal += price * quantity;
+    let cartItems = CartStore.getCartItems();
+    let items = Object.keys(cartItems).map((key) => {
+      let item = Object.assign({}, cartItems[key]);
+      item.price = products[key].price;
+      return item;
     });
+
+    let total = items.reduce((prev, currItem) => {
+      return prev + currItem.quantity * currItem.price;
+    }, 0).toFixed(2);
 
     return (
       <div className="checkout">
@@ -33,7 +41,7 @@ let Checkout = React.createClass({
             Subtotal
           </div>
           <div className="checkout__line__amount">
-            {`$${subtotal}`}
+            {`$${total}`}
           </div>
         </div>
 

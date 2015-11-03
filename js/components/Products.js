@@ -1,6 +1,9 @@
 const React = require("react");
 const QuantityControl = require("./QuantityControl");
-const {cartItems,products} = require("../data");
+const CartStore = require("../stores/CartStore");
+const {products} = require("../data");
+let {addCartItem} = CartStore;
+let cartItems = CartStore.getCartItems();
 
 let Product = React.createClass({
   render() {
@@ -16,7 +19,7 @@ let Product = React.createClass({
 
     } else {
       productControl = (
-        <a className="product__add">
+        <a onClick={addCartItem.bind(null, id)} className="product__add">
           <img className="product__add__icon" src="img/cart-icon.svg" />
         </a>
       );
@@ -52,6 +55,10 @@ let Product = React.createClass({
 });
 
 let Products = React.createClass({
+  componentDidMount() {
+    CartStore.addChangeListener(this.forceUpdate.bind(this));
+  },
+
   renderProducts() {
     // let products ...
     let productViews = Object.keys(products).map(id => {
