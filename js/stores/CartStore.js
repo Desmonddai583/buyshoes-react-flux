@@ -46,6 +46,10 @@ module.exports = {
     return _cartItems;
   },
 
+  cartItems() {
+    return _cartItems;
+  },
+
   addChangeListener(callback) {
     emitter.addListener("change",callback)
   },

@@ -1,13 +1,16 @@
 const React = require("react");
 const QuantityControl = require("./QuantityControl");
 const CartStore = require("../stores/CartStore");
-const {products} = require("../data");
+const ProductStore = require("../stores/ProductStore");
+const LikeStore = require("../stores/LikeStore");
+const connect = require("./connect");
+let {addLikeItem} = LikeStore;
 let {addCartItem} = CartStore;
-let cartItems = CartStore.getCartItems();
 
 let Product = React.createClass({
   render() {
     let {id,name,price,imagePath} = this.props.product;
+    let {likeItems,cartItems} = this.props;
     let item = cartItems[id];
 
     let productControl;
@@ -25,6 +28,7 @@ let Product = React.createClass({
       );
     }
 
+    let productHeartImg = likeItems[id]?("img/heart-liked.svg"):("img/heart.svg");
     return (
       <div className="product">
 
@@ -47,7 +51,9 @@ let Product = React.createClass({
             {name}
           </div>
 
-          <img className="product__heart" src="img/heart.svg" />
+          <a onClick={addLikeItem.bind(null, id)} className="product__like">
+            <img className="product__heart" src={productHeartImg} />
+          </a>
         </div>
       </div>
     );
@@ -60,11 +66,11 @@ let Products = React.createClass({
   },
 
   renderProducts() {
-    // let products ...
-    let productViews = Object.keys(products).map(id => {
-      let product = products[id];
+    let {likeItems,cartItems,filteredProducts} = this.props;
+    let productViews = Object.keys(filteredProducts).map(id => {
+      let product = filteredProducts[id];
       return (
-        <Product key={id} product={product}/>
+        <Product key={id} product={product} likeItems={likeItems} cartItems={cartItems}/>
       );
     });
 
@@ -80,4 +86,9 @@ let Products = React.createClass({
   },
 });
 
-module.exports = Products;
+@connect(CartStore,"cartItems")
+@connect(LikeStore,"likeItems")
+@connect(ProductStore,"filteredProducts")
+class ConnectedProducts extends Products {};
+
+module.exports = ConnectedProducts;

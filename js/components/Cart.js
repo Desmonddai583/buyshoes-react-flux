@@ -1,24 +1,22 @@
 const React = require("react");
 const Ps = require("perfect-scrollbar");
-const CartStore = require("../stores/CartStore");
 const {products} = require("../data");
 const QuantityControl = require("./QuantityControl");
+const MakeConnectedComponent = require("./MakeConnectedComponent");
+const CartStore = require("../stores/CartStore");
 let {removeCartItem} = CartStore;
-let cartItems = CartStore.getCartItems();
 
 let Cart = React.createClass({
   componentDidMount() {
-    CartStore.addChangeListener(this.forceUpdate.bind(this));
-
     let {$content} = this.refs;
     Ps.initialize($content);
   },
 
   renderCartItems() {
-    // let cartItems = ...;
+    let {cartItems} = this.props;
     return Object.keys(cartItems).map(key => {
       let item = cartItems[key];
-      return <CartItem key={key} item={item}/>
+      return <CartItem key={key} item={item} removeCartItem={removeCartItem}/>
     });
   },
 
@@ -31,7 +29,7 @@ let Cart = React.createClass({
 
           {this.renderCartItems()}
 
-        </div> {/* cart-item */}
+        </div>
       </div>
     );
   }
@@ -65,7 +63,7 @@ let CartItem = React.createClass({
             </div>
           </div>
           <img onClick={removeCartItem.bind(null, id)} className="cart-item__trash" src="img/trash-icon.svg" />
-        </div> {/* cart-item__top-part */}
+        </div>
 
         <div className="cart-item__qty">
           <QuantityControl item={item}/>
@@ -78,4 +76,4 @@ let CartItem = React.createClass({
   }
 });
 
-module.exports = Cart;
+module.exports = MakeConnectedComponent(Cart,CartStore,"cartItems");
