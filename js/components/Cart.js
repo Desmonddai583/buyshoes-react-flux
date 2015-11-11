@@ -4,7 +4,8 @@ const {products} = require("../data");
 const QuantityControl = require("./QuantityControl");
 const MakeConnectedComponent = require("./MakeConnectedComponent");
 const CartStore = require("../stores/CartStore");
-let {removeCartItem} = CartStore;
+const UndoStore = require("../stores/UndoStore");
+let {removeCartItem,undoShoppingCart} = require("../action");
 
 let Cart = React.createClass({
   componentDidMount() {
@@ -20,6 +21,18 @@ let Cart = React.createClass({
     });
   },
 
+  renderUndo() {
+    console.log(UndoStore.isHistoryEmpty())
+    if (!UndoStore.isHistoryEmpty()) {
+      return <h3 className="cart__undo"><a onClick={this.undo}>undo</a></h3>
+    }
+  },
+
+  undo() {
+    let cartItems = UndoStore.lastHistoryItems();
+    undoShoppingCart(cartItems);
+  },
+
   render() {
     return (
       <div className="cart">
@@ -30,6 +43,7 @@ let Cart = React.createClass({
           {this.renderCartItems()}
 
         </div>
+        {this.renderUndo()}
       </div>
     );
   }

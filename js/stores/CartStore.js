@@ -1,4 +1,6 @@
 const EventEmitter = require("events");
+const dispatcher = require("../AppDispatcher");
+import UndoStore from "./UndoStore";
 
 let emitter = new EventEmitter();
 
@@ -13,9 +15,15 @@ let _cartItems = {
   // },
 };
 
-module.exports = {
+dispatcher.register((action) => {
+  dispatcher.waitFor([UndoStore.undoToken]);
+  let handler = handlers[action.type];
+  handler && handler(action);
+});
 
-  addCartItem(productId) {
+let handlers = {
+  addCartItem(action) {
+    let { productId } = action;
     if (_cartItems[productId]) {
       _cartItems[productId].quantity += 1;
     } else {
@@ -27,12 +35,14 @@ module.exports = {
     emitChange();
   },
 
-  removeCartItem(productId) {
+  removeCartItem(action) {
+    let { productId } = action;
     delete _cartItems[productId];
     emitChange();
   },
 
-  updateCartItemQuantity(productId,quantity) {
+  updateCartItemQuantity(action) {
+    let { productId, quantity } = action;
     if (!_cartItems[productId]) return;
     if (quantity <= 0) {
       return;
@@ -42,6 +52,16 @@ module.exports = {
     emitChange();
   },
 
+  undoShoppingCart(action) {
+    let { cartItems } = action;
+    if(cartItems){
+      _cartItems = cartItems;
+    }
+    emitChange();
+  }
+}
+
+export default {
   getCartItems() {
     return _cartItems;
   },
@@ -56,5 +76,5 @@ module.exports = {
 
   removeChangeListener(callback) {
     emitter.removeListener("change",callback)
-  },
+  }
 }

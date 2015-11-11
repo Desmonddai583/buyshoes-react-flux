@@ -4,8 +4,8 @@ const CartStore = require("../stores/CartStore");
 const ProductStore = require("../stores/ProductStore");
 const LikeStore = require("../stores/LikeStore");
 const connect = require("./connect");
+let {addCartItem} = require("../action");
 let {addLikeItem} = LikeStore;
-let {addCartItem} = CartStore;
 
 let Product = React.createClass({
   render() {

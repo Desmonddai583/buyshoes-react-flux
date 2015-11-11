@@ -1,6 +1,6 @@
 const React = require("react");
 const CartStore = require("../stores/CartStore");
-let {updateCartItemQuantity} = CartStore;
+let {updateCartItemQuantity} = require("../action");
 
 let QuantityControl = React.createClass({
   render() {
