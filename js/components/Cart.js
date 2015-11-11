@@ -22,7 +22,6 @@ let Cart = React.createClass({
   },
 
   renderUndo() {
-    console.log(UndoStore.isHistoryEmpty())
     if (!UndoStore.isHistoryEmpty()) {
       return <h3 className="cart__undo"><a onClick={this.undo}>undo</a></h3>
     }
